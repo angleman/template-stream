@@ -79,5 +79,5 @@ function tStream(config) {
 }
 
 
-util.inherits(tStream, stream);
-module.exports = tStream;
+util.inherits(tStream, stream)
+module.exports = tStream
