@@ -15,26 +15,26 @@ function tStream(config) {
 		badJson:   0
 	}
 
-	function bump(area) {
+	self.bump = function(area) {
 		self._stat[area] = (self._stat[area]) ? self._stat[area] + 1 : 1
 	}
 
-	function stat(area) {
+	self.stat = function(area) {
 		return (self._stat[area]) ? self._stat[area] : self._stat
 	}
 
-	function Default(config) {
+	self.Default = function(config) {
 		self._default = xtend(self._default, self.config)  // update defaults
 		self.config   = xtend(self._default, self._config) // remerge defaults with original config
 		return self
 	} 
 
-	function bind(area, fn) {
+	self.bind = function(area, fn) {
 		self[area] = fn
 		return self
 	}
 
-	self.onError     = function(err) { 
+	self.onError = function(err) { 
 		self.emit('error', err)
 		return self
 	}
