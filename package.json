@@ -1,6 +1,6 @@
 {
   "name": "template-stream",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Template Stream",
   "main": "index.js",
   "scripts": {
