@@ -14,6 +14,7 @@ function tStream(config) {
 		filtered:  0,
 		badJson:   0
 	}
+	self.config   = xtend(self._default, self._config)
 
 	self.bump = function(area) {
 		self._stat[area] = (self._stat[area]) ? self._stat[area] + 1 : 1
