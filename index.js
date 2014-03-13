@@ -21,7 +21,11 @@ function tStream(config) {
 	}
 
 	self.stat = function(area) {
-		return (self._stat[area]) ? self._stat[area] : self._stat
+		if (self._stat[area]) {
+			return self._stat[area]
+		} else {
+			return self._stat
+		}
 	}
 
 	self.Default = function(config) {
@@ -47,30 +51,40 @@ function tStream(config) {
 		if (self.onFlush(cb)) cb()
 	}
 
-	self.onTransform = function (data) { 
-		return data // return undefined to filter
+	self.onTransform = function (data, callback) {
+		callback(data) // return undefined to filter
 	}
+
 
 	self._transform = function (data, encoding, callback) {
 		if (data) {
 			isJson  = data instanceof Buffer
+
+			function completeTransform(data) {
+				if (data === undefined) {
+					self._stat.filtered++
+				} else {
+					if (self.config.jsonOut || (isJson && self.config.jsonOut == 'auto')) {
+						json = JSON.stringify(data)
+						data = new Buffer(json, 'utf8')
+					}
+					self.push(data)
+					self._stat.processed++
+				}
+				callback()
+			}
+
 			if (isJson) {
 				json = data.toString('utf8')
 				try {
 					data = JSON.parse(json)
+					self.onTransform(data, completeTransform)
 				} catch (e) {
 					self._stat.badJson++
 					if (!self.config.filterErrors) self.emit('error', e + ': ' + json)
+					self.push(data)
 					callback()
 				}
-			}
-			transformedData = self.onTransform(data)
-			if (transformedData !== undefined) {
-				if (self.config.jsonOut || (isJson && self.config.jsonOut == 'auto')) data = new Buffer(JSON.stringify(data), 'utf8')
-				self._stat.processed++
-				self.push(data)
-			} else {
-				self._stat.filtered++
 			}
 		} else {
 			self.push(data)
