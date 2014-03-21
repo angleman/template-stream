@@ -13,7 +13,7 @@ npm install template-stream
 Building your own streams
 
 ```js
-tStream = new require('template-stream')({ jsonOut: 'auto', filterErrors: false }) // default config
+tStream = new require('template-stream')({ jsonOut: 'auto', filterErrors: false, appendString: '' }) // default config
 tStream.bind('onTransform', function(data) {
 	// do your processing here
 	return data // return data to be pushed down stream, return undefined to filter the data

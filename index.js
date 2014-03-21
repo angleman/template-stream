@@ -8,7 +8,7 @@ if (!stream) stream = require('readable-stream').Transform // stream 2 compatibl
 function tStream(config) {
 	self = this
 	self._config  = (config) ? config : {}
-	self._default = { jsonOut: 'auto', filterErrors: false } // true/false/'auto'=same as came in
+	self._default = { jsonOut: 'auto', filterErrors: false, appendString:'' } // true/false/'auto'=same as came in
 	self._stat    = {
 		processed: 0,
 		filtered:  0,
@@ -65,7 +65,7 @@ function tStream(config) {
 					self._stat.filtered++
 				} else {
 					if (self.config.jsonOut || (isJson && self.config.jsonOut == 'auto')) {
-						json = JSON.stringify(data)
+						json = JSON.stringify(data) + self.config.appendString
 						data = new Buffer(json, 'utf8')
 					}
 					self.push(data)
